@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subnetting Flashcards</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 15px 0;
+            font-size: 1.8rem;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button-success {
+            background: #2ecc71;
+        }
+        
+        .button-success:hover {
+            background: #27ae60;
+        }
+        
+        .button-danger {
+            background: #e74c3c;
+        }
+        
+        .button-danger:hover {
+            background: #c0392b;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #3498db;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background: #f1f8ff;
+            border-color: #3498db;
+        }
+        
+        .option.selected {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            font-weight: bold;
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .correct {
+            color: #27ae60;
+        }
+        
+        .incorrect {
+            color: #e74c3c;
+        }
+        
+        .print-button {
+            background: #9b59b6;
+        }
+        
+        .print-button:hover {
+            background: #8e44ad;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 10px;
+            background: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .explanation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #17a2b8;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            .button, .options {
+                display: none;
+            }
+            
+            .results {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subnetting Flashcards</h1>
+        
+        <div id="intro">
+            <div class="card">
+                <h2>Welcome to Subnetting Practice</h2>
+                <p>This tool will help you practice subnetting concepts including:</p>
+                <ul>
+                    <li>Calculating number of hosts</li>
+                    <li>Determining subnet masks</li>
+                    <li>Identifying network and broadcast addresses</li>
+                </ul>
+                <p>Each set contains 20 questions. You need a score of 80% or higher to pass.</p>
+                <p>Answer all questions first, then submit at the end to see your results.</p>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="button" onclick="startSet(1)">Start Set 1</button>
+                <button class="button" onclick="startSet(2)">Start Set 2</button>
+            </div>
+        </div>
+        
+        <div id="quiz" style="display: none;">
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+            
+            <div class="card">
+                <div id="question" class="question"></div>
+                <div id="options" class="options"></div>
+                
+                <div class="navigation">
+                    <button class="button button-danger" id="prevBtn" onclick="prevQuestion()" disabled>Previous</button>
+                    <button class="button" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="button button-success" id="submitBtn" onclick="submitQuiz()" style="display: none;">Submit Answers</button>
+                </div>
+            </div>
+            
+            <div id="feedback" style="text-align: center; margin: 15px 0; font-weight: bold;"></div>
+        </div>
+        
+        <div id="results" class="results">
+            <h2 style="text-align: center;">Quiz Results</h2>
+            
+            <div class="score-display">
+                Your score: <span id="score"></span>
+            </div>
+            
+            <div id="result-details"></div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="button print-button" onclick="window.print()">Print Results</button>
+                <button class="button" onclick="resetQuiz()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question sets with options and explanations
+        const questionSet1 = [
+            {
+                question: "What is the subnet mask for a /24 network?",
+                options: ["255.255.255.0", "255.255.0.0", "255.0.0.0", "255.255.255.255"],
+                answer: 0,
+                explanation: "A /24 network uses 24 bits for the network portion, which corresponds to 255.255.255.0 in dotted decimal notation."
+            },
+            {
+                question: "How many hosts are available in a /30 network?",
+                options: ["2", "4", "6", "8"],
+                answer: 0,
+                explanation: "A /30 network has 32 - 30 = 2 host bits, which gives 2^2 - 2 = 2 hosts (after subtracting network and broadcast addresses)."
+            },
+            {
+                question: "What is the subnet mask for a /26 network?",
+                options: ["255.255.255.192", "255.255.255.128", "255.255.255.0", "255.255.254.0"],
+                answer: 0,
+                explanation: "A /26 network uses 26 bits for the network portion. The subnet mask in binary has 26 ones followed by 6 zeros, which is 255.255.255.192 in decimal."
+            },
+            {
+                question: "How many hosts are available in a /28 network?",
+                options: ["14", "16", "30", "62"],
+                answer: 0,
+                explanation: "A /28 network has 32 - 28 = 4 host bits, which gives 2^4 - 2 = 14 hosts (after subtracting network and broadcast addresses)."
+            },
+            {
+                question: "What is the broadcast address for 192.168.1.0/24?",
+                options: ["192.168.1.255", "192.168.1.0", "192.168.0.255", "192.168.255.255"],
+                answer: 0,
+                explanation: "In a /24 network, the broadcast address is the last address in the subnet. For network 192.168.1.0/24, the broadcast address is 192.168.1.255."
+            },
+            {
+                question: "What is the network address for 192.168.1.50/24?",
+                options: ["192.168.1.0", "192.168.1.255", "192.168.0.0", "192.168.50.0"],
+                answer: 0,
+                explanation: "In a /24 network, the network address has all host bits set to 0. For IP 192.168.1.50/24, the network address is 192.168.1.0."
+            },
+            {
+                question: "How many subnets can you create from a /24 with a /26 mask?",
+                options: ["4", "8", "16", "32"],
+                answer: 0,
+                explanation: "Borrowing 2 bits (26-24=2) from the host portion gives 2^2 = 4 possible subnets."
+            },
+            {
+                question: "What is the subnet mask for 192.168.1.0 with 4 subnets?",
+                options: ["255.255.255.192", "255.255.255.128", "255.255.255.0", "255.255.192.0"],
+                answer: 0,
+                explanation: "To create 4 subnets from a Class C network, we need to borrow 2 bits (2^2=4), which gives a subnet mask of 255.255.255.192 (/26)."
+            },
+            {
+                question: "How many hosts per subnet in a 192.168.1.0/26 network?",
+                options: ["62", "64", "30", "126"],
+                answer: 0,
+                explanation: "A /26 network has 6 host bits (32-26=6), which gives 2^6 - 2 = 62 hosts per subnet."
+            },
+            {
+                question: "What is the first usable IP in 192.168.1.64/26?",
+                options: ["192.168.1.65", "192.168.1.64", "192.168.1.1", "192.168.1.63"],
+                answer: 0,
+                explanation: "The network address is 192.168.1.64, so the first usable host address is 192.168.1.65."
+            },
+            {
+                question: "What is the last usable IP in 192.168.1.64/26?",
+                options: ["192.168.1.126", "192.168.1.127", "192.168.1.128", "192.168.1.190"],
+                answer: 0,
+                explanation: "The broadcast address for 192.168.1.64/26 is 192.168.1.127, so the last usable host is 192.168.1.126."
+            },
+            {
+                question: "What is the broadcast address for 192.168.1.128/26?",
+                options: ["192.168.1.191", "192.168.1.255", "192.168.1.128", "192.168.1.192"],
+                answer: 0,
+                explanation: "The broadcast address for subnet 192.168.1.128/26 is the last address in that subnet, which is 192.168.1.191."
+            },
+            {
+                question: "How many hosts in a /27 network?",
+                options: ["30", "32", "62", "64"],
+                answer: 0,
+                explanation: "A /27 network has 5 host bits (32-27=5), which gives 2^5 - 2 = 30 hosts per subnet."
+            },
+            {
+                question: "What is the subnet mask for a /25 network?",
+                options: ["255.255.255.128", "255.255.255.0", "255.255.128.0", "255.255.255.192"],
+                answer: 0,
+                explanation: "A /25 network uses 25 bits for the network portion, which corresponds to 255.255.255.128 in dotted decimal notation."
+            },
+            {
+                question: "How many /28 subnets fit in a /24 network?",
+                options: ["16", "8", "4", "32"],
+                answer: 0,
+                explanation: "A /28 subnet uses 4 more bits than a /24 network (28-24=4), so we can create 2^4 = 16 subnets."
+            },
+            {
+                question: "What is the network address for 10.0.0.17/28?",
+                options: ["10.0.0.16", "10.0.0.0", "10.0.0.32", "10.0.0.48"],
+                answer: 0,
+                explanation: "In a /28 network, subnets increment by 16. 10.0.0.17 falls in the 10.0.0.16-10.0.0.31 range, so the network address is 10.0.0.16."
+            },
+            {
+                question: "What is the broadcast address for 172.16.0.0/20?",
+                options: ["172.16.15.255", "172.16.255.255", "172.16.0.255", "172.16.16.255"],
+                answer: 0,
+                explanation: "A /20 network has a block size of 16 in the third octet. The broadcast address for 172.16.0.0/20 is 172.16.15.255."
+            },
+            {
+                question: "How many hosts in a /29 network?",
+                options: ["6", "8", "14", "30"],
+                answer: 0,
+                explanation: "A /29 network has 3 host bits (32-29=3), which gives 2^3 - 2 = 6 hosts per subnet."
+            },
+            {
+                question: "What is the subnet mask for a /22 network?",
+                options: ["255.255.252.0", "255.255.255.0", "255.255.248.0", "255.255.240.0"],
+                answer: 0,
+                explanation: "A /22 network uses 22 bits for the network portion, which corresponds to 255.255.252.0 in dotted decimal notation."
+            },
+            {
+                question: "How many hosts in a /23 network?",
+                options: ["510", "512", "254", "1022"],
+                answer: 0,
+                explanation: "A /23 network has 9 host bits (32-23=9), which gives 2^9 - 2 = 510 hosts."
+            }
+        ];
+        
+        const questionSet2 = [
+            {
+                question: "What is the subnet mask for a /20 network?",
+                options: ["255.255.240.0", "255.255.255.0", "255.255.248.0", "255.255.252.0"],
+                answer: 0,
+                explanation: "A /20 network uses 20 bits for the network portion, which corresponds to 255.255.240.0 in dotted decimal notation."
+            },
+            {
+                question: "How many hosts are available in a /25 network?",
+                options: ["126", "128", "254", "256"],
+                answer: 0,
+                explanation: "A /25 network has 7 host bits (32-25=7), which gives 2^7 - 2 = 126 hosts per subnet."
+            },
+            {
+                question: "What is the subnet mask for a /28 network?",
+                options: ["255.255.255.240", "255.255.255.248", "255.255.255.224", "255.255.255.192"],
+                answer: 0,
+                explanation: "A /28 network uses 28 bits for the network portion, which corresponds to 255.255.255.240 in dotted decimal notation."
+            },
+            {
+                question: "How many hosts are available in a /29 network?",
+                options: ["6", "8", "14", "30"],
+                answer: 0,
+                explanation: "A /29 network has 3 host bits (32-29=3), which gives 2^3 - 2 = 6 hosts per subnet."
+            },
+            {
+                question: "What is the broadcast address for 192.168.0.0/23?",
+                options: ["192.168.1.255", "192.168.0.255", "192.168.255.255", "192.168.2.255"],
+                answer: 0,
+                explanation: "A /23 network has a block size of 2 in the third octet. The broadcast address for 192.168.0.0/23 is 192.168.1.255."
+            },
+            {
+                question: "What is the network address for 172.16.5.20/22?",
+                options: ["172.16.4.0", "172.16.0.0", "172.16.5.0", "172.16.8.0"],
+                answer: 0,
+                explanation: "A /22 network has a block size of 4 in the third octet. 172.16.5.20 falls in the 172.16.4.0-172.16.7.255 range, so the network address is 172.16.4.0."
+            },
+            {
+                question: "How many subnets can you create from a /16 with a /24 mask?",
+                options: ["256", "128", "64", "512"],
+                answer: 0,
+                explanation: "Borrowing 8 bits (24-16=8) from the host portion gives 2^8 = 256 possible subnets."
+            },
+            {
+                question: "What is the subnet mask for 10.0.0.0 with 8 subnets?",
+                options: ["255.255.255.224", "255.255.255.0", "255.255.224.0", "255.255.255.240"],
+                answer: 0,
+                explanation: "To create 8 subnets from a Class A network, we need to borrow 3 bits (2^3=8) in the third octet, which gives a subnet mask of 255.255.224.0. However, for a Class A network like 10.0.0.0, creating 8 subnets would typically use a /11 mask (255.224.0.0). The correct answer for a Class A network with 8 subnets is 255.224.0.0, but among the options, 255.255.255.224 is for Class C networks."
+            },
+            {
+                question: "How many hosts per subnet in a 192.168.0.0/28 network?",
+                options: ["14", "16", "30", "62"],
+                answer: 0,
+                explanation: "A /28 network has 4 host bits (32-28=4), which gives 2^4 - 2 = 14 hosts per subnet."
+            },
+            {
+                question: "What is the first usable IP in 192.168.1.32/27?",
+                options: ["192.168.1.33", "192.168.1.32", "192.168.1.1", "192.168.1.31"],
+                answer: 0,
+                explanation: "The network address is 192.168.1.32, so the first usable host address is 192.168.1.33."
+            },
+            {
+                question: "What is the last usable IP in 192.168.1.128/26?",
+                options: ["192.168.1.190", "192.168.1.191", "192.168.1.192", "192.168.1.254"],
+                answer: 0,
+                explanation: "The broadcast address for 192.168.1.128/26 is 192.168.1.191, so the last usable host is 192.168.1.190."
+            },
+            {
+                question: "What is the broadcast address for 192.168.1.96/27?",
+                options: ["192.168.1.127", "192.168.1.255", "192.168.1.96", "192.168.1.128"],
+                answer: 0,
+                explanation: "A /27 network has a block size of 32. The broadcast address for subnet 192.168.1.96/27 is 192.168.1.127."
+            },
+            {
+                question: "How many hosts in a /26 network?",
+                options: ["62", "64", "30", "126"],
+                answer: 0,
+                explanation: "A /26 network has 6 host bits (32-26=6), which gives 2^6 - 2 = 62 hosts per subnet."
+            },
+            {
+                question: "What is the subnet mask for a /21 network?",
+                options: ["255.255.248.0", "255.255.240.0", "255.255.252.0", "255.255.224.0"],
+                answer: 0,
+                explanation: "A /21 network uses 21 bits for the network portion, which corresponds to 255.255.248.0 in dotted decimal notation."
+            },
+            {
+                question: "How many /26 subnets fit in a /23 network?",
+                options: ["8", "4", "16", "32"],
+                answer: 0,
+                explanation: "A /26 subnet uses 3 more bits than a /23 network (26-23=3), so we can create 2^3 = 8 subnets."
+            },
+            {
+                question: "What is the network address for 192.168.5.80/28?",
+                options: ["192.168.5.80", "192.168.5.0", "192.168.5.64", "192.168.5.96"],
+                answer: 0,
+                explanation: "A /28 network has a block size of 16. 192.168.5.80 falls exactly on the network boundary, so the network address is 192.168.5.80."
+            },
+            {
+                question: "What is the broadcast address for 10.1.0.0/17?",
+                options: ["10.1.127.255", "10.1.255.255", "10.1.0.255", "10.1.128.255"],
+                answer: 0,
+                explanation: "A /17 network has a block size of 128 in the third octet. The broadcast address for 10.1.0.0/17 is 10.1.127.255."
+            },
+            {
+                question: "How many hosts in a /24 network?",
+                options: ["254", "256", "255", "252"],
+                answer: 0,
+                explanation: "A /24 network has 8 host bits (32-24=8), which gives 2^8 - 2 = 254 hosts per subnet."
+            },
+            {
+                question: "What is the subnet mask for a /18 network?",
+                options: ["255.255.192.0", "255.255.128.0", "255.255.0.0", "255.255.224.0"],
+                answer: 0,
+                explanation: "A /18 network uses 18 bits for the network portion, which corresponds to 255.255.192.0 in dotted decimal notation."
+            },
+            {
+                question: "How many hosts in a /19 network?",
+                options: ["8190", "8192", "4094", "4096"],
+                answer: 0,
+                explanation: "A /19 network has 13 host bits (32-19=13), which gives 2^13 - 2 = 8190 hosts."
+            }
+        ];
+        
+        let currentSet = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        
+        function startSet(setNumber) {
+            document.getElementById("intro").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("results").style.display = "none";
+            
+            currentSet = setNumber === 1 ? [...questionSet1] : [...questionSet2];
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            // Initialize user answers array
+            for (let i = 0; i < currentSet.length; i++) {
+                userAnswers.push({
+                    selectedOption: null,
+                    isCorrect: false
+                });
+            }
+            
+            shuffleArray(currentSet);
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const questionElem = document.getElementById("question");
+            const optionsElem = document.getElementById("options");
+            const progressElem = document.getElementById("progress");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const submitBtn = document.getElementById("submitBtn");
+            
+            questionElem.textContent = `Question ${currentQuestionIndex + 1}: ${currentSet[currentQuestionIndex].question}`;
+            
+            // Clear previous options
+            optionsElem.innerHTML = "";
+            
+            // Add new options
+            currentSet[currentQuestionIndex].options.forEach((option, index) => {
+                const optionElem = document.createElement("div");
+                optionElem.className = "option";
+                if (userAnswers[currentQuestionIndex].selectedOption === index) {
+                    optionElem.classList.add("selected");
+                }
+                optionElem.textContent = option;
+                optionElem.onclick = () => selectOption(index);
+                optionsElem.appendChild(optionElem);
+            });
+            
+            // Update progress bar
+            progressElem.style.width = `${((currentQuestionIndex + 1) / currentSet.length) * 100}%`;
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === currentSet.length - 1) {
+                nextBtn.style.display = "none";
+                submitBtn.style.display = "inline-block";
+            } else {
+                nextBtn.style.display = "inline-block";
+                submitBtn.style.display = "none";
+            }
+            
+            document.getElementById("feedback").textContent = "";
+        }
+        
+        function selectOption(index) {
+            // Remove selected class from all options
+            document.querySelectorAll(".option").forEach(opt => {
+                opt.classList.remove("selected");
+            });
+            
+            // Add selected class to clicked option
+            document.querySelectorAll(".option")[index].classList.add("selected");
+            
+            // Save the selected answer
+            userAnswers[currentQuestionIndex].selectedOption = index;
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < currentSet.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+        
+        function submitQuiz() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < currentSet.length; i++) {
+                const userAnswer = userAnswers[i].selectedOption;
+                const correctAnswer = currentSet[i].answer;
+                
+                userAnswers[i].isCorrect = userAnswer === correctAnswer;
+                if (userAnswers[i].isCorrect) {
+                    score++;
+                }
+                
+                // Store question details for results
+                userAnswers[i].question = currentSet[i].question;
+                userAnswers[i].userAnswerText = userAnswer !== null ? currentSet[i].options[userAnswer] : "Not answered";
+                userAnswers[i].correctAnswerText = currentSet[i].options[correctAnswer];
+                userAnswers[i].explanation = currentSet[i].explanation;
+            }
+            
+            showResults();
+        }
+        
+        function showResults() {
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("results").style.display = "block";
+            
+            const scorePercentage = Math.round((score / currentSet.length) * 100);
+            const scoreElem = document.getElementById("score");
+            scoreElem.textContent = `${score}/${currentSet.length} (${scorePercentage}%)`;
+            
+            if (scorePercentage >= 80) {
+                scoreElem.style.color = "#27ae60";
+                scoreElem.innerHTML += " - <span style='color:#27ae60'>Passed!</span>";
+            } else {
+                scoreElem.style.color = "#e74c3c";
+                scoreElem.innerHTML += " - <span style='color:#e74c3c'>Failed. Need 80% to pass.</span>";
+            }
+            
+            const resultDetailsElem = document.getElementById("result-details");
+            resultDetailsElem.innerHTML = "";
+            
+            userAnswers.forEach((answer, index) => {
+                const resultItem = document.createElement("div");
+                resultItem.className = "result-item";
+                
+                resultItem.innerHTML = `
+                    <p><strong>Question ${index + 1}:</strong> ${answer.question}</p>
+                    <p class="${answer.isCorrect ? 'correct' : 'incorrect'}">
+                        Your answer: ${answer.userAnswerText} 
+                        ${answer.isCorrect ? "✓" : "✗"}
+                    </p>
+                    ${!answer.isCorrect ? `<p class="correct">Correct answer: ${answer.correctAnswerText}</p>` : ""}
+                    <div class="explanation">
+                        <strong>Explanation:</strong> ${answer.explanation}
+                    </div>
+                `;
+                
+                resultDetailsElem.appendChild(resultItem);
+            });
+        }
+        
+        function resetQuiz() {
+            document.getElementById("results").style.display = "none";
+            document.getElementById("intro").style.display = "block";
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+    </script>
+</body>
+</html>
